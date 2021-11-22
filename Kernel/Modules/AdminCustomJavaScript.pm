@@ -15,81 +15,81 @@ use warnings;
 our $ObjectManagerDisabled = 1;
 
 sub new {
-	my ($Type, %Param) = @_;
+    my ($Type, %Param) = @_;
 
-	my $Self = {%Param};
-	bless($Self, $Type);
+    my $Self = {%Param};
+    bless($Self, $Type);
 
-	return $Self;
+    return $Self;
 }
 
 sub Run {
-	my ($Self, %Param) = @_;
+    my ($Self, %Param) = @_;
 
-	my $LayoutObject	= $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-	my $ParamObject		= $Kernel::OM->Get('Kernel::System::Web::Request');
-	my $XMLObject			= $Kernel::OM->Get('Kernel::System::XML');
-	my $CacheObject		= $Kernel::OM->Get('Kernel::System::Cache');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $XMLObject    = $Kernel::OM->Get('Kernel::System::XML');
+    my $CacheObject  = $Kernel::OM->Get('Kernel::System::Cache');
 
 
-	if ($Self->{Subaction} eq 'AddAction') {
-		$LayoutObject->ChallengeTokenCheck();
+    if ($Self->{Subaction} eq 'AddAction') {
+        $LayoutObject->ChallengeTokenCheck();
 
-		my $JavaScriptField = $ParamObject->GetParam(Param => 'JavaScriptField') || '';
+        my $JavaScriptField = $ParamObject->GetParam(Param => 'JavaScriptField') || '';
 
-		# Flush old JavaScript.
-		$XMLObject->XMLHashDelete(
-			Type	=> 'CustomJavaScript',
-			Key		=> '1'
-		);
+        # Flush old JavaScript.
+        $XMLObject->XMLHashDelete(
+            Type => 'CustomJavaScript',
+            Key  => '1'
+        );
 
-		# Update new JavaScript.
-		$XMLObject->XMLHashAdd(
-			Key			=> 1,
-			Type		=> 'CustomJavaScript',
-			XMLHash => [({'Content' => $JavaScriptField})]
-		);
+        # Update new JavaScript.
+        $XMLObject->XMLHashAdd(
+            Key     => 1,
+            Type    => 'CustomJavaScript',
+            XMLHash => [({'Content' => $JavaScriptField})]
+        );
 
-		# Delete Cache.
-		$CacheObject->Delete(
-			Type	=> 'CustomJavaScript',
-			Key		=> '1'
-		);
-	
-		return $LayoutObject->Redirect(OP => "Action=AdminCustomJavaScript");  # Prevent from resubmitting.
-	} else {
-		$Param{Action} = 'Add';
+        # Delete Cache.
+        $CacheObject->Delete(
+            Type => 'CustomJavaScript',
+            Key  => '1'
+        );
+    
+        return $LayoutObject->Redirect(OP => "Action=AdminCustomJavaScript");  # Prevent from resubmitting.
+    } else {
+        $Param{Action} = 'Add';
 
-		# Get the current JavaScript.
-		my @XMLHash = $XMLObject->XMLHashGet(
-			Type	=> 'CustomJavaScript',
-			Key		=> '1'
-		);
+        # Get the current JavaScript.
+        my @XMLHash = $XMLObject->XMLHashGet(
+            Type => 'CustomJavaScript',
+            Key  => '1'
+        );
 
-		$Param{'JavaScriptField'} = $XMLHash[0]{'Content'};
+        $Param{'JavaScriptField'} = $XMLHash[0]{'Content'};
 
-		$LayoutObject->Block(
-			Name => 'Overview',
-			Data => \%Param
-		);
+        $LayoutObject->Block(
+            Name => 'Overview',
+            Data => \%Param
+        );
 
-		# Create the CodeMirror editor.
-		$LayoutObject->SetRichTextParameters(
-			Data => {
-				%Param,
-				RichTextHeight	=> '600',
-				RichTextWidth		=> '99%',
-				RichTextType		=> 'CodeMirror'
-			}
-		);
+        # Create the CodeMirror editor.
+        $LayoutObject->SetRichTextParameters(
+            Data => {
+                %Param,
+                RichTextHeight => '600',
+                RichTextWidth  => '99%',
+                RichTextType   => 'CodeMirror'
+            }
+        );
 
-		return $LayoutObject->Header() .
-					 $LayoutObject->NavigationBar() . 
-					 $LayoutObject->Output(
-						 TemplateFile => 'AdminCustomJavaScript',
-						 Data					=> \%Param
-					 ) . $LayoutObject->Footer();
-	}
+        return  $LayoutObject->Header() .
+                $LayoutObject->NavigationBar() . 
+                $LayoutObject->Output(
+                    TemplateFile => 'AdminCustomJavaScript',
+                    Data         => \%Param
+                ) . $LayoutObject->Footer();
+    }
 }
 
 1;

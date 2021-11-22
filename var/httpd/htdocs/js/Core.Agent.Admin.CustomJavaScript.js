@@ -14,68 +14,67 @@ Core.Agent = Core.Agent || {};
 Core.Agent.Admin = Core.Agent.Admin || {};
 
 Core.Agent.Admin.CustomJavaScript = (function(TargetNS) {
-	let JavaScriptCodeMirror;
+    let JavaScriptCodeMirror;
 
-	TargetNS.Init = function () {
-		CKEDITOR.on('instanceReady', function(Editor) {
-			$('.cke_button__autocomplete').hide()
-			$('.cke_button__maximize ').hide()
+    TargetNS.Init = function() {
+        CKEDITOR.on('instanceReady', function(Editor) {
+            $('.cke_button__autocomplete').hide()
+            $('.cke_button__maximize ').hide()
 
-			JavaScriptCodeMirror = $('.CodeMirror')[0].CodeMirror;
-			JavaScriptCodeMirror.setOption('mode', 'text/javascript');
-		});
+            JavaScriptCodeMirror = $('.CodeMirror')[0].CodeMirror;
+            JavaScriptCodeMirror.setOption('mode', 'text/javascript');
+        });
 
-		$('#TemplateAgentName').on('click', function() {
-			TargetNS.TemplateAgentName();
-		});
+        $('#TemplateAgentName').on('click', function() {
+            TargetNS.TemplateAgentName();
+        });
 
-		$('#TemplateSpecificAction').on('click', function() {
-			TargetNS.TemplateSpecificAction();
-		});
+        $('#TemplateSpecificAction').on('click', function() {
+            TargetNS.TemplateSpecificAction();
+        });
 
-		$('#ExportJavaScript').on('click', function() {
-			TargetNS.ExportJavaScript();
-		});
+        $('#ExportJavaScript').on('click', function() {
+            TargetNS.ExportJavaScript();
+        });
+    }
 
-	};
+    TargetNS.InsertText = function(Text) {
+        JavaScriptCodeMirror.replaceRange("\n" + Text, {line: Infinity});
+    }
 
-	TargetNS.InsertText = function(Text) {
-		JavaScriptCodeMirror.replaceRange("\n" + Text, {line: Infinity});
-	}
+    TargetNS.ExportJavaScript = function() {
+        // Create a download element, run, and delete it afterwards.
+        const Value = 'data:text/javascript;charset=utf-8,' + encodeURIComponent(JavaScriptCodeMirror.getValue());
 
-	TargetNS.ExportJavaScript = function() {
-		// Create a download element, run, and delete it afterwards.
-		const Value = 'data:text/javascript;charset=utf-8,' + encodeURIComponent(JavaScriptCodeMirror.getValue());
+        let FileString = document.createElement('a');
+        $(FileString).attr({'href': Value, 'download': 'Core.Agent.CustomJavaScript.js'}).hide();;
 
-		let FileString = document.createElement('a');
-		$(FileString).attr({'href': Value, 'download': 'Core.Agent.CustomJavaScript.js'}).hide();;
+        $(document.body).append(FileString);
+        FileString.click();
+        FileString.remove();
+    }
 
-		$(document.body).append(FileString);
-		FileString.click();
-		FileString.remove();
-	}
+    TargetNS.TemplateAgentName = function() {
+        const JavaScript = 
+            "/* Console.log the name of the current agent. */\n" +
+            "const AgentName = $('#ToolBar > li.UserAvatar > div > span').html();\n" +
+            "console.log(AgentName);\n";
+        TargetNS.InsertText(JavaScript);
+    }
 
-	TargetNS.TemplateAgentName = function() {
-		const JavaScript = 
-			"/* Console.log the name of the current agent. */\n" +
-			"const AgentName = $('#ToolBar > li.UserAvatar > div > span').html();\n" +
-			"console.log(AgentName);\n";
-		TargetNS.InsertText(JavaScript);
-	}
+    TargetNS.TemplateSpecificAction = function() {
+        const JavaScript = 
+            "const Action = Core.Config.Get('Action');\n" +
+            "\n" +
+            "/* Only execute this code on the AgentTicketZoom screen. */\n" +
+            "if (Action == 'AgentTicketZoom') {\n" +
+            "    console.log('Ticket overview');\n" +
+            "}\n";
 
-	TargetNS.TemplateSpecificAction = function() {
-		const JavaScript = 
-			"const Action = Core.Config.Get('Action');\n" +
-			"\n" +
-			"/* Only execute this code on the AgentTicketZoom screen. */\n" +
-			"if (Action == 'AgentTicketZoom') {\n" +
-			"    console.log('Ticket overview');\n" +
-			"}\n";
+        TargetNS.InsertText(JavaScript);
+    }
 
-		TargetNS.InsertText(JavaScript);
-	}
+    Core.Init.RegisterNamespace(TargetNS, 'APP_MODULE');
 
-	Core.Init.RegisterNamespace(TargetNS, 'APP_MODULE');
-
-	return TargetNS;
+    return TargetNS;
 }(Core.Agent.Admin.CustomJavaScript || {}));

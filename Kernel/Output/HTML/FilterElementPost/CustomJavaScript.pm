@@ -13,54 +13,54 @@ use strict;
 use warnings;
 
 our @ObjectDependencies = (
-	'Kernel::System::XML',
-	'Kernel::System::Cache'
+  'Kernel::System::XML',
+  'Kernel::System::Cache'
 );
 
 sub new {
-	my ($Type, %Param) = @_;
+  my ($Type, %Param) = @_;
 
-	my $Self = {};
-	bless($Self, $Type);
+  my $Self = {};
+  bless($Self, $Type);
 
-	return $Self;
+  return $Self;
 }
 
 sub Run {
-	my ($Self, %Param) = @_;
+  my ($Self, %Param) = @_;
 
-	my $CacheObject	= $Kernel::OM->Get('Kernel::System::Cache');
+  my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
 
-	my $JavaScript = $CacheObject->Get(
-		Type => 'CustomJavaScript',
-		Key  =>'1'
-	);
+  my $JavaScript = $CacheObject->Get(
+    Type => 'CustomJavaScript',
+    Key  =>'1'
+  );
 
-	if (!$JavaScript) {
-		my $XMLObject	= $Kernel::OM->Get('Kernel::System::XML');
+  if (!$JavaScript) {
+    my $XMLObject = $Kernel::OM->Get('Kernel::System::XML');
 
-		# Get JavaScript from DB. 
-		my @XMLHash = $XMLObject->XMLHashGet(
-			Type	=> 'CustomJavaScript',
-			Key		=> '1'
-		);
-		$JavaScript = $XMLHash[0]{'Content'};
+    # Get JavaScript from DB. 
+    my @XMLHash = $XMLObject->XMLHashGet(
+      Type => 'CustomJavaScript',
+      Key  => '1'
+    );
+    $JavaScript = $XMLHash[0]{'Content'};
 
-		# Only cache is there is something to cache.
-		if ($JavaScript) {
-			$CacheObject->Set(
-				Type	=> 'CustomJavaScript',
-				Key		=> '1',
-				TTL		=> 60 * 60 * 24 * 20,
-				Value	=> $JavaScript
-			);
-		}
-	}
+    # Only cache if there is something to cache.
+    if ($JavaScript) {
+      $CacheObject->Set(
+        Type  => 'CustomJavaScript',
+        Key   => '1',
+        TTL   => 60 * 60 * 24 * 20,
+        Value => $JavaScript
+      );
+    }
+  }
 
-	# Only return if something exists.
-	${$Param{Data}} =~ s{</body>}{<script>Core.App.Ready(function () { $JavaScript });</script></body>}smx if ($JavaScript);
+  # Only return if something exists.
+  ${$Param{Data}} =~ s{</body>}{<script>Core.App.Ready(function() { $JavaScript });</script></body>}smx if ($JavaScript);
 
-	return 1;
+  return 1;
 }
 
 1;

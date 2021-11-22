@@ -9,56 +9,56 @@
 
 [% RenderBlockStart("Overview") %]
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
-	<h1 class="InvisibleText">[% Translate("Manage JavaScript") | html %]</h1>
+    <h1 class="InvisibleText">[% Translate("Manage JavaScript") | html %]</h1>
 
-	[% BreadcrumbPath = [{
-		Name => Translate('Manage JavaScript'),
-		Link => Env("Action")
-	}] %]
+    [% BreadcrumbPath = [{
+        Name => Translate('Manage JavaScript'),
+        Link => Env("Action")
+    }] %]
 
-	[% INCLUDE "Breadcrumb.tt" Path = BreadcrumbPath %]
+    [% INCLUDE "Breadcrumb.tt" Path = BreadcrumbPath %]
 
-	<div class="SidebarColumn">
-		<div class="WidgetSimple">
-			<div class="Header">
-				<h2>[% Translate("Hint") | html %]</h2>
-			</div>
-			<div class="Content">
-				<p class="FieldExplanation">[% Translate("This JavaScript code will be executed on all pages for agents.") | html %]</p>
-				<p class="FieldExplanation">[% Translate("You should make a backup before a major update. You can use the build in export function.") | html %]</p>
-			</div>
-			<div class="Header">
-				<h2>[% Translate("Templates") | html %]*</h2>
-			</div>
-			<div class="Content">
-				<p class="FieldExplanation"><a id="TemplateAgentName" href="#" onclick="return false;"><i class="fa fa-plus-square"></i> [% Translate("Agent name to console.log") | html %]</a></p>
-				<p class="FieldExplanation"><a id="TemplateSpecificAction" href="#" onclick="return false;"><i class="fa fa-plus-square"></i> [% Translate("Execute in AgentTicketZoom") | html %]</a></p>
-				<p class="FieldExplanation">[% Translate("*will be added to the bottom of the editor.") | html %]</p>
-			</div>
-		</div>
-	</div>
-	<div class="ContentColumn">
-		<div class="WidgetSimple">
-			<div class="Header">
-				<h2>[% Translate("JavaScript for agents") | html %]</h2>
-			</div>
-			<div class="Content">
-				<form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">
-					<input type="hidden" name="Action" value="[% Env("Action") %]"/>
-					<input type="hidden" name="Subaction" value="[% Data.Action | uri %]Action"/>
-						<div class="RichTextField">
-							<textarea id="JavaScriptField" class="RichText" rows="10" cols="60" name="JavaScriptField">[% Data.JavaScriptField | html %]</textarea>
-						</div>
-						<div class="Clear"></div>
-						<fieldset class="TableLike">
-								<div class="SpacingTop SaveButtons">
-									<button class="CallForAction Primary" id="Submit" type="submit" value="[% Translate("Save") | html %]"><span>[% Translate("Save") | html %]</span></button>
-									<button class="CallForAction" id="ExportJavaScript" type="button" value="[% Translate("Save") | html %]"><span>[% Translate("Export as .js") | html %]</span></button>
-								</div>
-						</fieldset>
-				</form>
-			</div>
-		</div>	
-	</div>
+    <div class="SidebarColumn">
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Hint") | html %]</h2>
+            </div>
+            <div class="Content">
+                <p class="FieldExplanation">[% Translate("This JavaScript code will be executed on all pages for agents.") | html %]</p>
+                <p class="FieldExplanation">[% Translate("You should make a backup before a major update. You can use the build in export function.") | html %]</p>
+            </div>
+            <div class="Header">
+                <h2>[% Translate("Templates") | html %]*</h2>
+            </div>
+            <div class="Content">
+                <p class="FieldExplanation"><a id="TemplateAgentName" href="#" onclick="return false;"><i class="fa fa-plus-square"></i> [% Translate("Agent name to console.log") | html %]</a></p>
+                <p class="FieldExplanation"><a id="TemplateSpecificAction" href="#" onclick="return false;"><i class="fa fa-plus-square"></i> [% Translate("Execute in AgentTicketZoom") | html %]</a></p>
+                <p class="FieldExplanation">[% Translate("*will be added to the bottom of the editor.") | html %]</p>
+            </div>
+        </div>
+    </div>
+    <div class="ContentColumn">
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("JavaScript for agents") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="[% Data.Action | uri %]Action"/>
+                        <div class="RichTextField">
+                            <textarea id="JavaScriptField" class="RichText" rows="10" cols="60" name="JavaScriptField">[% Data.JavaScriptField | html %]</textarea>
+                        </div>
+                        <div class="Clear"></div>
+                        <fieldset class="TableLike">
+                                <div class="SpacingTop SaveButtons">
+                                    <button class="CallForAction Primary" id="Submit" type="submit" value="[% Translate("Save") | html %]"><span>[% Translate("Save") | html %]</span></button>
+                                    <button class="CallForAction" id="ExportJavaScript" type="button" value="[% Translate("Save") | html %]"><span>[% Translate("Export as .js") | html %]</span></button>
+                                </div>
+                        </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 [% RenderBlockEnd("Overview") %]
